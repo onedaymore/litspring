@@ -3,6 +3,8 @@ package org.lispring.test.v1;
 import org.junit.Assert;
 import org.junit.Test;
 import org.lispring.beans.BeanDefinition;
+import org.lispring.beans.factory.BeanCreateException;
+import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
 import org.lispring.beans.factory.support.DefaultBeanFactory;
 import org.lispring.service.PetStoService;
@@ -25,5 +27,29 @@ public class BeanFactoryTest {
 		PetStoService pss = (PetStoService) facorty.getBean("petSto");
 		
 		Assert.assertNotNull(pss);
+	}
+	
+	@Test
+	public void testInvalidBean() {
+		BeanFactory facorty = new DefaultBeanFactory("beans.xml");
+		try {
+			facorty.getBean("InvalidBean");
+		} catch (BeanCreateException e) {
+			return;
+		}
+		
+		Assert.fail("excption occ");
+	}
+	
+	@Test
+	public void testInvalidBean2() {
+		
+		try {
+			BeanFactory facorty = new DefaultBeanFactory("beansss.xml");
+		} catch (BeanDefinitionException e) {
+			return;
+		}
+		
+		Assert.fail("excption occ");
 	}
 }

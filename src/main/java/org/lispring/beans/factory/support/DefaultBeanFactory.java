@@ -11,6 +11,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.lispring.beans.BeanDefinition;
+import org.lispring.beans.factory.BeanCreateException;
+import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
 import org.lispring.service.PetStoService;
 import org.lispring.util.ClassUtils;
@@ -43,15 +45,17 @@ public class DefaultBeanFactory implements BeanFactory {
 				bdMap.put(beanId, db);
 			}
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new BeanDefinitionException("BeanDefinitionException");
 		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+
 		}
 	}
 
@@ -64,24 +68,16 @@ public class DefaultBeanFactory implements BeanFactory {
 	public Object getBean(String beanId) {
 		BeanDefinition bd = getBeanDefinition(beanId);
 		if (bd == null) {
-			return null;
+			throw new BeanCreateException("create ex");
 		}
 		
 		String className = bd.getBeanClassName();
 		try {
 			Class clazz = Class.forName(className);
 			return clazz.newInstance();
-		} catch (ClassNotFoundException e) { 
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		} catch (Exception e) { 
+			throw new BeanCreateException("create ex");
+		} 
 	}
 
 	
