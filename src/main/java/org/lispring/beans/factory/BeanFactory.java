@@ -5,8 +5,6 @@ import org.lispring.service.PetStoService;
 
 public interface BeanFactory {
 
-	BeanDefinition getBeanDefinition(String string);
-
 	Object getBean(String beanId);
 
 }

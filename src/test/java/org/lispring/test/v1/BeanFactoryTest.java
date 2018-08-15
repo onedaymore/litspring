@@ -7,6 +7,7 @@ import org.lispring.beans.factory.BeanCreateException;
 import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
 import org.lispring.beans.factory.support.DefaultBeanFactory;
+import org.lispring.beans.factory.xml.XmlBeanDefinitionReader;
 import org.lispring.service.PetStoService;
 
 /**
@@ -18,7 +19,11 @@ public class BeanFactoryTest {
 
 	@Test
 	public void testGetBean() {
-		BeanFactory facorty = new DefaultBeanFactory("beans.xml");
+		
+		
+		DefaultBeanFactory facorty = new DefaultBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(facorty);
+		reader.loadDefinition("beans.xml");
 		
 		BeanDefinition db = facorty.getBeanDefinition("petSto");
 		
@@ -31,8 +36,10 @@ public class BeanFactoryTest {
 	
 	@Test
 	public void testInvalidBean() {
-		BeanFactory facorty = new DefaultBeanFactory("beans.xml");
 		try {
+			DefaultBeanFactory facorty = new DefaultBeanFactory();
+			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(facorty);
+			reader.loadDefinition("beans.xml");
 			facorty.getBean("InvalidBean");
 		} catch (BeanCreateException e) {
 			return;
@@ -45,7 +52,9 @@ public class BeanFactoryTest {
 	public void testInvalidBean2() {
 		
 		try {
-			BeanFactory facorty = new DefaultBeanFactory("beansss.xml");
+			DefaultBeanFactory facorty = new DefaultBeanFactory();
+			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(facorty);
+			reader.loadDefinition("beansss.xml");
 		} catch (BeanDefinitionException e) {
 			return;
 		}

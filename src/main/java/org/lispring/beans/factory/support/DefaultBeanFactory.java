@@ -17,51 +17,23 @@ import org.lispring.beans.factory.BeanFactory;
 import org.lispring.service.PetStoService;
 import org.lispring.util.ClassUtils;
 
-public class DefaultBeanFactory implements BeanFactory {
+public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 	
 	private final Map<String, BeanDefinition> bdMap = new ConcurrentHashMap<>();
-
-	public DefaultBeanFactory(String config) {
-		// 1,ÐèÒª½âÎöxml
-		loadDefinition(config);
+	
+	public DefaultBeanFactory() {
 		
 	}
-	
-	private void loadDefinition(String config) {
-		InputStream is = null;
-		ClassLoader cl = ClassUtils.getDefaultClassLoader();
-		is = cl.getResourceAsStream(config);
-		SAXReader reader = new SAXReader();
-		try {
-			Document doc = reader.read(is);
-			
-			Element root = doc.getRootElement();//<beans>
-			Iterator<Element> it = root.elementIterator();
-			while (it.hasNext()) {
-				Element ele = it.next();
-				String beanId = ele.attributeValue("id");
-				String className = ele.attributeValue("class");
-				BeanDefinition db = new GenericBeanDefinition(beanId, className);
-				bdMap.put(beanId, db);
-			}
-		} catch (DocumentException e) {
-			throw new BeanDefinitionException("BeanDefinitionException");
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 
-		}
+	@Override
+	public void registryBeanDefinition(String beanId, BeanDefinition bd) {
+		this.bdMap.put(beanId, bd);
+		
 	}
 
 	@Override
 	public BeanDefinition getBeanDefinition(String beanId) {
-		return bdMap.get(beanId);
+		return this.bdMap.get(beanId);
 	}
 
 	@Override
@@ -77,8 +49,9 @@ public class DefaultBeanFactory implements BeanFactory {
 			return clazz.newInstance();
 		} catch (Exception e) { 
 			throw new BeanCreateException("create ex");
-		} 
+		}
 	}
+
 
 	
 }
