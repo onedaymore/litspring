@@ -11,7 +11,7 @@ public class ClassPathXmlApplicationContext extends AbtractApplicationContext {
 
 	@Override
 	protected Resource getResourceFromPath(String path) {
-		return new ClassPathResource(path);
+		return new ClassPathResource(path, getClassLoader());
 	}
 
 }

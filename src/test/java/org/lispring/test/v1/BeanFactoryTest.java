@@ -35,6 +35,31 @@ public class BeanFactoryTest {
 	}
 	
 	@Test
+	public void testGetBeanScope() {
+		
+		
+		DefaultBeanFactory facorty = new DefaultBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(facorty);
+		reader.loadDefinition("beans.xml");
+		
+		BeanDefinition db = facorty.getBeanDefinition("petSto");
+		
+		Assert.assertTrue(db.isSingleton());
+		Assert.assertFalse(db.isPrototype());
+		
+		//Assert.assertEquals(BeanDefinition.SCOPE_DEFAULT, db.getScope());
+		
+		Assert.assertEquals("org.lispring.service.PetStoService", db.getBeanClassName());
+		
+		PetStoService pss = (PetStoService) facorty.getBean("petSto");
+		
+		Assert.assertNotNull(pss);
+		PetStoService pss2 = (PetStoService) facorty.getBean("petSto");
+		
+		Assert.assertTrue(pss2 == pss);
+	}
+	
+	@Test
 	public void testInvalidBean() {
 		try {
 			DefaultBeanFactory facorty = new DefaultBeanFactory();
