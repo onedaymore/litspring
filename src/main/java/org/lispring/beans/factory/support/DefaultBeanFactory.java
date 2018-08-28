@@ -1,8 +1,15 @@
 package org.lispring.beans.factory.support;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +18,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.lispring.beans.BeanDefinition;
+import org.lispring.beans.PropertyValue;
 import org.lispring.beans.factory.BeanCreateException;
 import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
@@ -59,6 +67,58 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 	}
 	
 	Object createBean(BeanDefinition bd) {
+		Object obj = instanseBean(bd);
+		
+		//…Ë÷√ Ù–‘
+		populateBean(bd, obj);
+		return obj;
+		
+	}
+	
+	private void populateBean(BeanDefinition bd, Object obj) {
+		List<PropertyValue> pvs = bd.getPropertyValues();
+		if (pvs == null || pvs.isEmpty()) {
+			return;
+		}
+		
+		BeanDefineValueResolver resolver = new BeanDefineValueResolver(this);
+		
+		for (PropertyValue pv : pvs) {
+			String propertyName = pv.getName();
+			Object valueName = pv.getValue();
+			Object convertObj  = resolver.resolveValueIfNecessary(valueName);
+			
+			//ddd
+			try {
+				BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+				PropertyDescriptor [] pds = beanInfo.getPropertyDescriptors();
+				for (PropertyDescriptor pd : pds) {
+					if (pd.getName().equals(propertyName)) {
+						Method m = pd.getWriteMethod();
+						m.invoke(obj, convertObj);
+						break;
+					}
+				}
+				
+			} catch (IntrospectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+
+	Object instanseBean(BeanDefinition bd) {
 		String className = bd.getBeanClassName();
 		try {
 			Class clazz = Class.forName(className);

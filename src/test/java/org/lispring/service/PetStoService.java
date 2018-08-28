@@ -16,4 +16,15 @@ public class PetStoService {
 		return itemDao;
 	}
 
+	public void setAccountDao(AccountDao accountDao) {
+		this.accountDao = accountDao;
+	}
+
+	public void setItemDao(ItemDao itemDao) {
+		this.itemDao = itemDao;
+	}
+	
+	
+	
+
 }

@@ -99,6 +99,10 @@ public class XmlBeanDefinitionReader {
 				String beanId = ele.attributeValue(ID_ATTR);
 				String className = ele.attributeValue(CLASS_ATTR);
 				BeanDefinition bd = new GenericBeanDefinition(beanId, className);
+				if (ele.attributeValue(SCOPE_ATTR) != null) {
+					bd.setScope(ele.attributeValue(SCOPE_ATTR));
+				}
+				parsePropertyElement(ele, bd);
 				this.registry.registryBeanDefinition(beanId, bd);
 			}
 		} catch (DocumentException e) {
