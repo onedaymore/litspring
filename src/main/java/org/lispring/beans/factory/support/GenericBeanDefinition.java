@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lispring.beans.BeanDefinition;
+import org.lispring.beans.ConstructorArgument;
 import org.lispring.beans.PropertyValue;
 
 public class GenericBeanDefinition implements BeanDefinition {
@@ -15,6 +16,8 @@ public class GenericBeanDefinition implements BeanDefinition {
 	private boolean prototype = false;
 	
 	private List<PropertyValue> pvs = new ArrayList<>();
+	
+	private ConstructorArgument args = new ConstructorArgument();
 
 	public GenericBeanDefinition(String beanId, String className) {
 		super();
@@ -52,6 +55,11 @@ public class GenericBeanDefinition implements BeanDefinition {
 	@Override
 	public List<PropertyValue> getPropertyValues() {
 		return pvs;
+	}
+
+	@Override
+	public ConstructorArgument getConstructorArgument() {
+		return args;
 	}
 	
 	

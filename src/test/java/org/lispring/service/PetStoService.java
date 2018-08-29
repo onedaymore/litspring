@@ -7,6 +7,12 @@ public class PetStoService {
 	
 	private AccountDao accountDao;
 	private ItemDao itemDao;
+	
+	public PetStoService(AccountDao accountDao, ItemDao itemDao) {
+		super();
+		this.accountDao = accountDao;
+		this.itemDao = itemDao;
+	}
 
 	public AccountDao getAccountDao() {
 		return accountDao;

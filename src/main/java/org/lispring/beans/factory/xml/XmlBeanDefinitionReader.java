@@ -9,6 +9,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.lispring.beans.BeanDefinition;
+import org.lispring.beans.ConstructorArgument;
 import org.lispring.beans.PropertyValue;
 import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
@@ -42,6 +43,10 @@ public class XmlBeanDefinitionReader {
 	
 	private static final String NAME_ATTR = "name";
 	
+	private static final String CONSTRUCTOR_ARG_ELE = "constructor-arg";
+	
+	private static final String TYPE_ATTR = "type";
+	
 	
 	BeanDefinitionRegistry registry;
 
@@ -67,6 +72,7 @@ public class XmlBeanDefinitionReader {
 				if (ele.attributeValue(SCOPE_ATTR) != null) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTR));
 				}
+				parseConstructorArgEles(ele, bd);
 				parsePropertyElement(ele, bd);
 				this.registry.registryBeanDefinition(beanId, bd);
 			}
@@ -102,6 +108,7 @@ public class XmlBeanDefinitionReader {
 				if (ele.attributeValue(SCOPE_ATTR) != null) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTR));
 				}
+				parseConstructorArgEles(ele, bd);
 				parsePropertyElement(ele, bd);
 				this.registry.registryBeanDefinition(beanId, bd);
 			}
@@ -157,6 +164,21 @@ public class XmlBeanDefinitionReader {
 			
 		}
 		return null;
+	}
+	
+	public void parseConstructorArgEles(Element ele, BeanDefinition bd) {
+		Iterator iter = ele.elementIterator(CONSTRUCTOR_ARG_ELE);
+		while (iter.hasNext()) {
+			Element el = (Element) iter.next();
+			parseConstructorArgEle(el, bd);
+		}
+	}
+	
+	public void parseConstructorArgEle(Element ele, BeanDefinition bd) {
+		Object value = parsePropertyValue(ele, bd, null);
+		
+		ConstructorArgument.ValueHolder vh = new ConstructorArgument.ValueHolder(value);
+		bd.getConstructorArgument().addArgumens(vh);
 	}
 	
 
