@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans>
+
+<context:component-scan base-package="org.lispring.dao,org.lispring.service">
+</context:component-scan>
+</beans>

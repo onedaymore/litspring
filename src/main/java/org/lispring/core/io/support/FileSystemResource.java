@@ -20,6 +20,12 @@ public class FileSystemResource implements Resource {
 		file = new File(path);
 	}
 
+	public FileSystemResource(File file) {
+		this.file = file;
+		path = file.getAbsolutePath();
+		
+	}
+
 	@Override
 	public InputStream getInputStream() throws IOException {
 		InputStream is = new FileInputStream(file);

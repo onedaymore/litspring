@@ -2,10 +2,15 @@ package org.lispring.service;
 
 import org.lispring.dao.AccountDao;
 import org.lispring.dao.ItemDao;
+import org.lispring.stereotype.AutoWired;
+import org.lispring.stereotype.Component;
 
+@Component(value = "petSto")
 public class PetStoService {
 	
+	@AutoWired
 	private AccountDao accountDao;
+	@AutoWired
 	private ItemDao itemDao;
 	
 	public PetStoService(AccountDao accountDao, ItemDao itemDao) {

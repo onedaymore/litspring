@@ -1,6 +1,11 @@
 package org.lispring.util;
 
 public class ClassUtils {
+	
+	private static final char PACKAGE_SEPARATOR = '.';
+	
+	/** The path separator character: '/' */
+	private static final char PATH_SEPARATOR = '/';
 
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = null;
@@ -25,4 +30,11 @@ public class ClassUtils {
 		}
 		return cl;
 	}
+	
+	public static String convertClassNameToResourcePath(String className) {
+		Assert.notNULL(className, "Class name must not be null");
+		return className.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
+	}
+	
+	
 }
