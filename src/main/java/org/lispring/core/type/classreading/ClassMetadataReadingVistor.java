@@ -1,11 +1,12 @@
 package org.lispring.core.type.classreading;
 
+import org.lispring.core.type.ClassMetadata;
 import org.lispring.util.ClassUtils;
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Opcodes;
 import org.springframework.asm.SpringAsmInfo;
 
-public class ClassMetadataReadingVistor extends ClassVisitor {
+public class ClassMetadataReadingVistor extends ClassVisitor implements ClassMetadata {
 	
 	private String className;
 	private boolean isInterface;
