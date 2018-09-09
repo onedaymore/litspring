@@ -6,6 +6,12 @@ public class ClassUtils {
 	
 	/** The path separator character: '/' */
 	private static final char PATH_SEPARATOR = '/';
+	
+	/** The CGLIB class separator: "$$" */
+	public static final String CGLIB_CLASS_SEPARATOR = "$$";
+	
+	/** The inner class separator character: '$' */
+	private static final char INNER_CLASS_SEPARATOR = '$';
 
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = null;
@@ -41,5 +47,16 @@ public class ClassUtils {
 		return resourcePath.replace(PATH_SEPARATOR, PACKAGE_SEPARATOR);
 	}
 	
+	
+	public static String getShortName(String className) {
+		int lastDotIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+		int nameEndIndex = className.indexOf(CGLIB_CLASS_SEPARATOR);
+		if (nameEndIndex == -1) {
+			nameEndIndex = className.length();
+		}
+		String shortName = className.substring(lastDotIndex + 1, nameEndIndex);
+		shortName = shortName.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
+		return shortName;
+	}
 	
 }
