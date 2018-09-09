@@ -28,12 +28,12 @@ public abstract class AbtractApplicationContext implements ApplicationContext {
 	
 	protected abstract Resource getResourceFromPath(String path);
 
-	@Override
+	
 	public void setClassLoader(ClassLoader cl) {
 		this.cl = cl;
 	}
 
-	@Override
+	
 	public ClassLoader getClassLoader() {
 		return cl != null ? cl : ClassUtils.getDefaultClassLoader();
 	}

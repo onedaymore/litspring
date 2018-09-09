@@ -1,6 +1,8 @@
 package org.lispring.beans.factory;
 
-public interface ConfigureBeanFactory extends BeanFactory {
+import org.lispring.beans.factory.config.AutowireCapableBeanFactory;
+
+public interface ConfigureBeanFactory extends AutowireCapableBeanFactory {
 
 	public void setClassLoader(ClassLoader cl);
 	public ClassLoader getClassLoader();

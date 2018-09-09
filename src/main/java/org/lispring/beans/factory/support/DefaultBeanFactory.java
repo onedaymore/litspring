@@ -23,6 +23,7 @@ import org.lispring.beans.factory.BeanCreateException;
 import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
 import org.lispring.beans.factory.ConfigureBeanFactory;
+import org.lispring.beans.factory.config.DependencyDescriptor;
 import org.lispring.service.PetStoService;
 import org.lispring.util.ClassUtils;
 
@@ -139,6 +140,38 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 		
 		return cl != null ? cl : ClassUtils.getDefaultClassLoader();
 	}
+
+	@Override
+	public Object resolveDependency(DependencyDescriptor descriptor) {
+		Class<?> typeToMatch = descriptor.getDependencyType();
+		
+		for (BeanDefinition bd : bdMap.values()) {
+			resolveBeanClass(bd);
+			
+			Class<?> beanClass = bd.getBeanClass();
+			
+			if (typeToMatch.isAssignableFrom(beanClass)) {
+				return getBean(bd.getID());
+			}
+		}
+		return null;
+	}
+
+	private void resolveBeanClass(BeanDefinition bd) {
+		if (bd.hasBeanClass()) {
+			return;
+		} else {
+			try {
+				bd.reolveBeanClass(getClassLoader());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+
 
 
 	

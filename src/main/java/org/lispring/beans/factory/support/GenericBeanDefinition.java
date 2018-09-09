@@ -18,6 +18,8 @@ public class GenericBeanDefinition implements BeanDefinition {
 	private List<PropertyValue> pvs = new ArrayList<>();
 	
 	private ConstructorArgument args = new ConstructorArgument();
+	
+	private Class<?> beanClass;
 
 	public GenericBeanDefinition(String beanId, String className) {
 		super();
@@ -78,6 +80,27 @@ public class GenericBeanDefinition implements BeanDefinition {
 
 	public void setID(String beanId) {
 		this.beanId = beanId;
+	}
+
+	@Override
+	public Class<?> getBeanClass() {
+		return beanClass;
+	}
+
+	@Override
+	public boolean hasBeanClass() {
+		return beanClass != null;
+	}
+
+	@Override
+	public Class<?> reolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException {
+		String className = getBeanClassName();
+		if (className == null) {
+			return null;
+		}
+		Class<?> clazz = classLoader.loadClass(className);
+		beanClass = clazz;
+		return clazz;
 	}
 
 	
