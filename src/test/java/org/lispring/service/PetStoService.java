@@ -19,6 +19,10 @@ public class PetStoService {
 		this.itemDao = itemDao;
 	}
 
+	public PetStoService() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public AccountDao getAccountDao() {
 		return accountDao;
 	}
