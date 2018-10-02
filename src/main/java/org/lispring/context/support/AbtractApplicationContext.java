@@ -49,4 +49,10 @@ public abstract class AbtractApplicationContext implements ApplicationContext {
 		postProcessor.setBeanFactory(beanFactory);
 		beanFactory.addBeanPostProcessor(postProcessor);
 	}
+	
+	public Class<?> getType(String targetBeanName) {
+		return this.factory.getType(targetBeanName);
+	}
+	
+	
 }

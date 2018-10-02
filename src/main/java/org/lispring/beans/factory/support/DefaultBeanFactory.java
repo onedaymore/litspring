@@ -194,6 +194,16 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 		return this.beanPostProcessorList;
 	}
 
+	@Override
+	public Class<?> getType(String targetBeanName) {
+		BeanDefinition bd = this.getBeanDefinition(targetBeanName);
+		if (bd == null) {
+			
+		}
+		resolveBeanClass(bd);
+		return bd.getBeanClass();
+	}
+
 
 
 

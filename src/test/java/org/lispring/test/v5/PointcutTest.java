@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.lispring.aop.MethodMatcher;
 import org.lispring.aop.aspectj.AspectJExpressionPointcut;
-import org.lispring.dao.AccountDao;
 import org.lispring.service.v5.PetStoService;
 
 /**
