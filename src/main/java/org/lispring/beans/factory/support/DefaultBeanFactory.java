@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,9 @@ import org.lispring.beans.factory.BeanCreateException;
 import org.lispring.beans.factory.BeanDefinitionException;
 import org.lispring.beans.factory.BeanFactory;
 import org.lispring.beans.factory.ConfigureBeanFactory;
+import org.lispring.beans.factory.config.BeanPostProcessor;
 import org.lispring.beans.factory.config.DependencyDescriptor;
+import org.lispring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.lispring.service.PetStoService;
 import org.lispring.util.ClassUtils;
 
@@ -32,6 +35,9 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 	
 	private final Map<String, BeanDefinition> bdMap = new ConcurrentHashMap<>();
 	private ClassLoader cl;
+	
+	
+	private List<BeanPostProcessor> beanPostProcessorList = new ArrayList<>();
 	
 	public DefaultBeanFactory() {
 		
@@ -77,6 +83,12 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 	}
 	
 	private void populateBean(BeanDefinition bd, Object obj) {
+		for (BeanPostProcessor postProcessor : this.getBeanPostProcessor()) {
+			if (postProcessor instanceof InstantiationAwareBeanPostProcessor) {
+				((InstantiationAwareBeanPostProcessor) postProcessor).postProcessPropertyValues(obj, bd.getID());
+			}
+		}
+		
 		List<PropertyValue> pvs = bd.getPropertyValues();
 		if (pvs == null || pvs.isEmpty()) {
 			return;
@@ -169,6 +181,17 @@ implements ConfigureBeanFactory, BeanDefinitionRegistry {
 			}
 		}
 		
+	}
+
+	@Override
+	public void addBeanPostProcessor(BeanPostProcessor postProcessor) {
+		beanPostProcessorList.add(postProcessor);
+		
+	}
+
+	@Override
+	public List<BeanPostProcessor> getBeanPostProcessor() {
+		return this.beanPostProcessorList;
 	}
 
 

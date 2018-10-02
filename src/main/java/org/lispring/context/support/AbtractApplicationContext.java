@@ -1,5 +1,7 @@
 package org.lispring.context.support;
 
+import org.lispring.beans.factory.ConfigureBeanFactory;
+import org.lispring.beans.factory.annotation.AutoWiredAnnotaitionProcesser;
 import org.lispring.beans.factory.support.DefaultBeanFactory;
 import org.lispring.beans.factory.xml.XmlBeanDefinitionReader;
 import org.lispring.context.ApplicationContext;
@@ -19,6 +21,9 @@ public abstract class AbtractApplicationContext implements ApplicationContext {
 		Resource resource = getResourceFromPath(path);
 		reader.loadDefinitions(resource);
 		factory.setClassLoader(getClassLoader());
+		
+		// zhuru
+		registerBeanPostProcessors(factory);
 	}
 
 	@Override
@@ -36,5 +41,12 @@ public abstract class AbtractApplicationContext implements ApplicationContext {
 	
 	public ClassLoader getClassLoader() {
 		return cl != null ? cl : ClassUtils.getDefaultClassLoader();
+	}
+	
+	
+	protected void registerBeanPostProcessors(ConfigureBeanFactory beanFactory) {
+		AutoWiredAnnotaitionProcesser postProcessor = new AutoWiredAnnotaitionProcesser();
+		postProcessor.setBeanFactory(beanFactory);
+		beanFactory.addBeanPostProcessor(postProcessor);
 	}
 }

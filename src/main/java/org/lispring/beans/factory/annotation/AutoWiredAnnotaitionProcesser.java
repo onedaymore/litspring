@@ -11,14 +11,18 @@ import java.util.Set;
 
 import javax.accessibility.Accessible;
 
+import org.lispring.beans.BeanException;
+import org.lispring.beans.factory.BeanCreateException;
+import org.lispring.beans.factory.ConfigureBeanFactory;
 import org.lispring.beans.factory.config.AutowireCapableBeanFactory;
+import org.lispring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.lispring.beans.factory.support.DefaultBeanFactory;
 import org.lispring.core.annotation.AnnotationUtils;
 import org.lispring.service.PetStoService;
 import org.lispring.stereotype.AutoWired;
 import org.lispring.util.ReflectionUtils;
 
-public class AutoWiredAnnotaitionProcesser {
+public class AutoWiredAnnotaitionProcesser implements InstantiationAwareBeanPostProcessor {
 	
 	private AutowireCapableBeanFactory factory;
 	private String requiredParameterName = "required";
@@ -31,12 +35,12 @@ public class AutoWiredAnnotaitionProcesser {
 		autowiredAnnotationTypes.add(AutoWired.class);
 	}
 
-	public void setBeanFactory(DefaultBeanFactory beanFactory) {
+	public void setBeanFactory(ConfigureBeanFactory beanFactory) {
 		factory = beanFactory;
 		
 	}
 
-	public InjectionMetadata buildAutoWiringMetadata(Class<PetStoService> clazz) {
+	public InjectionMetadata buildAutoWiringMetadata(Class<?> clazz) {
 		LinkedList<InjectionElement> eles = new LinkedList<>();
 		Class<?> targetClass = clazz;
 		
@@ -84,6 +88,41 @@ public class AutoWiredAnnotaitionProcesser {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Object beforeInitialization(Object bean, String beanName) throws BeanException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object afterInitialization(Object bean, String beanName) throws BeanException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object beforeInstantiation(Class<?> beanClass, String beanName) throws BeanException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean afterInstantiation(Object bean, String beanName) throws BeanException {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void postProcessPropertyValues(Object bean, String beanName) throws BeanException {
+		InjectionMetadata metadata = buildAutoWiringMetadata(bean.getClass());
+		try {
+			metadata.inject(bean);
+		} catch (Throwable ex) {
+			throw new BeanCreateException(beanName);
+		}
+		
 	}
 
 }
